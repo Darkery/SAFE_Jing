@@ -1,5 +1,5 @@
 ID: SAFE_Jing
-_schema-version: "2.1"
+_schema-version: '2.1'
 parameters:
   deploy_mode: html5-repo
 version: 0.0.1
@@ -12,11 +12,18 @@ modules:
       memory: 256M
     requires:
       - name: SAFE_Jing_html5_repo_runtime
+      - name: uaa_SAFE_Jing
   - name: SAFE_Jing_ui_deployer
     type: com.sap.html5.application-content
     path: SAFE_Jing_ui_deployer
     requires:
       - name: SAFE_Jing_html5_repo_host
+    build-parameters:
+      requires:
+        - name: web
+          artifacts:
+            - './*'
+          target-path: resources/web
   - name: SAFE_Jing-db
     type: hdb
     path: db
@@ -34,9 +41,16 @@ modules:
     provides:
       - name: srv_api
         properties:
-          url: ${default-url}
+          url: '${default-url}'
     requires:
       - name: SAFE_Jing-db-hdi-container
+  - name: web
+    type: html5
+    path: web
+    build-parameters:
+      builder: grunt
+      supported-platforms: []
+      build-result: dist
 resources:
   - name: SAFE_Jing_html5_repo_runtime
     parameters:
@@ -51,4 +65,15 @@ resources:
   - name: SAFE_Jing-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
-      hdi-container-name: ${service-name}
+      hdi-container-name: '${service-name}'
+  - name: uaa_SAFE_Jing
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+    type: org.cloudfoundry.managed-service
+  - name: dest_SAFE_Jing
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service
