@@ -32,6 +32,8 @@ modules:
       disk-quota: 256M
     requires:
       - name: SAFE_Jing-db-hdi-container
+        properties:
+          TARGET_CONTAINER: '~{hdi-container-name}'
   - name: SAFE_Jing-srv
     type: nodejs
     path: srv
