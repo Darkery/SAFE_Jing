@@ -34,6 +34,11 @@ modules:
       - name: SAFE_Jing-db-hdi-container
         properties:
           TARGET_CONTAINER: '~{hdi-container-name}'
+      - name: cross-container-service-1
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: ServiceName_1
+          service: '~{the-service-name}'
   - name: SAFE_Jing-srv
     type: nodejs
     path: srv
@@ -79,3 +84,9 @@ resources:
       service-plan: lite
       service: destination
     type: org.cloudfoundry.managed-service
+  - name: cross-container-service-1
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: CROSS_SCHEMA_SFLIGHT
+    properties:
+      the-service-name: '${service-name}'
